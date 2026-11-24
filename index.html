@@ -380,15 +380,17 @@ body[data-view="home"]{background:transparent}
 .qbar button{height:36px;padding:0 14px;border-radius:999px;font-weight:500;font-size:14px}
 .qbar button:hover{background:rgba(255,255,255,.7)}
 .qbar .dark{background:var(--ink);color:#fff}.qbar .dark:hover{background:#2A2D33}
-.bubble{position:fixed;z-index:8;transform:translate(-50%,calc(-100% - 14px));width:min(300px,40vw);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;padding:14px 16px 14px;box-shadow:0 0 0 1px rgba(255,255,255,.8),0 18px 44px -18px rgba(40,50,70,.4);pointer-events:auto}
+.bubble{position:fixed;z-index:8;transform:translate(-50%,calc(-100% - 14px));width:min(420px,46vw);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:26px;padding:20px 22px 20px;box-shadow:0 0 0 1px rgba(255,255,255,.8),0 18px 44px -18px rgba(40,50,70,.4);pointer-events:auto}
 .bubble:after{content:"";position:absolute;left:50%;bottom:-8px;width:16px;height:16px;background:rgba(255,255,255,.94);transform:translateX(-50%) rotate(45deg);border-radius:3px}
 .bubble.right{transform:translate(22px,-50%)}.bubble.right:after{left:-7px;top:50%;bottom:auto;transform:translateY(-50%) rotate(45deg)}
 .bubble .ph{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.bubble .tag{white-space:nowrap;font-size:11px;font-weight:600;letter-spacing:.02em;background:var(--ink);color:#fff;border-radius:6px;padding:3px 7px}
-.bubble .ph span{font-size:12.5px;color:var(--mu);white-space:nowrap}
-.bubble p{font-size:15px;line-height:1.35;color:var(--ink)}
-.bubble .bb{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.bubble .bb button{height:32px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:500;background:var(--tile)}
+.bubble .tag{white-space:nowrap;font-size:12px;font-weight:600;letter-spacing:.02em;background:var(--ink);color:#fff;border-radius:6px;padding:3px 7px}
+.bubble .ph span{font-size:14px;color:var(--mu);white-space:nowrap}
+.bubble p{font-size:22px;line-height:1.2;letter-spacing:-.02em;font-weight:500;color:var(--ink)}
+.bubble .bb{display:grid;gap:8px;margin-top:14px}
+.bubble .bb button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;min-height:52px;padding:11px 16px;border-radius:16px;background:var(--tile)}
+.bubble .bb button b{font-size:16px;font-weight:500}.bubble .bb button small{font-size:13px;color:var(--mu)}
+.bubble .bb button.on small{color:rgba(255,255,255,.8)}
 .bubble .bb button:hover{background:#E3E7EC}
 .bubble .bb button.on{background:var(--green);color:#fff}
 
@@ -482,7 +484,7 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
 @media (max-width:960px){.co{grid-template-columns:1fr}.sum{position:static}.codone{grid-template-columns:1fr}}
 @media (max-width:560px){.co{padding:24px 16px 60px}.cobox{padding:20px 18px}.rv{grid-template-columns:1fr}.p4{grid-template-columns:1fr 1fr}.cofoot .btn{padding:0 20px}}
 
-@media (max-width:1100px){.mas{column-count:4}.setup{display:none}.qbar .prog{display:none}.bubble{width:210px!important}.bubble .bb{display:none}}
+@media (max-width:1100px){.mas{column-count:4}.setup{display:none}.qbar .prog{display:none}.bubble{width:min(380px,56vw)!important}}
 @media (min-width:760px){body[data-view="room"] .zoom{top:96px;transform:none;flex-direction:row}.zoom i{width:1px;height:auto;margin:10px 2px}}
 @media (max-width:860px){
   .mas{column-count:3}.choose{grid-template-columns:1fr}.choice .cv{height:auto;min-height:230px;padding:20px 18px 16px}.choice .ch{padding:24px 22px 0}.choice .ct{padding:0 22px 24px}.choice h2{font-size:32px}
@@ -944,7 +946,7 @@ function building(type){const g=new THREE.Group();const d=3;let w,h;
   box(g,1.3,.06,.7,'#D6D2CA',0,.03,d/2+.35,{role:'paint'});
   const lb=label(HOMES[type].n);lb.position.set(0,1.5,d/2+.06);g.add(lb);
   g.position.x=BX[type];return g;}
-function tree(x,z,s=1,tone=0){const t=new THREE.Group();const G=[['#4F8A36','#6AA645','#3F7A2E'],['#5E9A3E','#7BB34E','#4C8A35']][tone%2];cyl(t,.06,.08,.9,'#8C6E57',0,.45,0,{role:'wood'});[[0,1.3,0,.55,0],[.25,1.6,.1,.4,1],[-.2,1.55,-.15,.38,2],[.05,1.85,-.05,.3,1]].forEach(([a,b,c,r,k])=>sph(t,r,G[k],a,b,c,{role:'leaf'}));t.position.set(x,0,z);t.scale.setScalar(s);scene.add(t);}
+function tree(x,z,s=1,tone=0,lift=0){const t=new THREE.Group();const G=[['#4F8A36','#6AA645','#3F7A2E'],['#5E9A3E','#7BB34E','#4C8A35']][tone%2];cyl(t,.06,.08,.9+lift,'#8C6E57',0,(.9+lift)/2,0,{role:'wood'});[[0,1.3,0,.55,0],[.25,1.6,.1,.4,1],[-.2,1.55,-.15,.38,2],[.05,1.85,-.05,.3,1]].forEach(([a,b,c,r,k])=>sph(t,r,G[k],a,b+lift,c,{role:'leaf'}));t.position.set(x,0,z);t.scale.setScalar(s);scene.add(t);}
 /* ---- town life: lawn, flowers, students hanging out ---- */
 const SKIN=['#D9B08C','#A87452','#E7C3A0','#7A4E33'],HAIR=['#2A221C','#5A3A24','#1B1B1B','#B98B4E'];
 function lounger(x,z,ry,shirt,pants,k,o={}){const g=new THREE.Group();const sk=SKIN[k%4],hr=HAIR[k%4];
@@ -989,6 +991,33 @@ function buildGrass(){const G=new THREE.ConeGeometry(.5,1,3,1);G.translate(0,.5,
   let i=0,tries=0;while(i<N&&tries<140000){tries++;const x=-13+rng()*26,z=-12+rng()*22.5;if(skip(x,z))continue;
     const h=.06+rng()*.12;o.position.set(x,0,z);o.rotation.set((rng()-.5)*.6,rng()*6.28,(rng()-.5)*.6);o.scale.set(.02+rng()*.012,h,.02+rng()*.012);o.updateMatrix();im.setMatrixAt(i,o.matrix);im.setColorAt(i,c.set(GC[(rng()*GC.length)|0]));i++;}
   im.count=i;im.instanceMatrix.needsUpdate=true;im.instanceColor.needsUpdate=true;im.receiveShadow=true;im.castShadow=false;scene.add(im);}
+
+function sitPose(p,legs=-1.57){p.userData.L.rotation.x=legs;p.userData.R.rotation.x=legs;return p;}
+function picnicTable(x,z,ry){const g=new THREE.Group();const O=C.oak;
+  rb(g,2.3,.07,.95,O,0,.82,0,{role:'wood',r:.015});[-.78,.78].forEach(dz=>rb(g,2.3,.06,.3,O,0,.5,dz,{role:'wood',r:.012}));
+  [-.9,.9].forEach(dx=>{[-1,1].forEach(sd=>{const l=rb(g,.07,.98,.07,C.oakD,dx,.42,sd*.3,{role:'wood',r:.01});l.rotation.x=sd*.66;});rb(g,.07,.06,1.85,C.oakD,dx,.46,0,{role:'wood',r:.01});});
+  // laptop, two coffee cups and a snack box on top
+  rb(g,.34,.015,.24,'#C9CDD2',-.45,.86,-.12,{role:'paint',r:.006});const sc=rb(g,.34,.22,.012,'#2A2C2F',-.45,.97,-.24,{role:'paint',r:.006});sc.rotation.x=-.25;
+  cyl(g,.04,.035,.1,'#FFFFFF',.35,.91,.14,{role:'paint'});cyl(g,.04,.035,.1,'#E8503A',.55,.91,-.17,{role:'paint'});rb(g,.22,.06,.16,'#F2B632',.05,.89,.2,{role:'paint',r:.01});
+  g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);
+  const seat=(dx,dz,face)=>{const p=sitPose(person(),-1.35);p.userData.AL.rotation.x=-1.1;p.userData.AR.rotation.x=-1.25;const c=Math.cos(ry),s2=Math.sin(ry);
+    p.position.set(x+dx*c+dz*s2,-.26,z-dx*s2+dz*c);p.rotation.y=ry+face;scene.add(p);return p;};
+  return [seat(-.5,-.9,0),seat(.55,.9,Math.PI)];}
+function hammock(x,z0,z1,y=1.15,sag=.55,par=scene){const L=z1-z0,W=.85,NU=24,NV=8;const geo=new THREE.PlaneGeometry(1,1,NU,NV);const pos=geo.attributes.position;
+  for(let i=0;i<pos.count;i++){const u=pos.getX(i)+.5,v=pos.getY(i)+.5;const t=2*u-1,dip=sag*(1-t*t),curl=Math.pow(Math.abs(2*v-1),2)*.16*(1-t*t)+.02;
+    pos.setXYZ(i,x+(v-.5)*W*(1-.55*t*t),y-dip+curl,z0+u*L);}
+  geo.computeVertexNormals();
+  const tex=canvasTex(64,256,(c,w,h)=>{c.fillStyle='#F4ECDD';c.fillRect(0,0,w,h);['#E8503A','#2E4F9E','#F2B632'].forEach((col,i)=>{c.fillStyle=col;c.fillRect(8+i*18,0,7,h);});});
+  const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({map:tex,roughness:.9,side:THREE.DoubleSide}));m.castShadow=true;m.receiveShadow=true;par.add(m);
+  [[z0,-1],[z1,1]].forEach(([zz,sd])=>rod(par,[x,y+.02,zz],[x,y+.12,zz+sd*.32],.012,'#CDBFA8',{role:'fabric'}));
+  return m;}
+function leanOnTree(tx,tz,face,o={}){const p=person();const bx=Math.sin(face),bz=Math.cos(face);
+  if(o.sit){sitPose(p,-1.57);p.position.set(tx-bx*-.0+bx*.26,-.66,tz+bz*.26);}else{const dd=o.d||.3;p.position.set(tx+bx*dd,0,tz+bz*dd);p.rotation.order='YXZ';p.rotation.x=-.1;p.userData.L.rotation.z=.08;p.userData.R.rotation.z=-.12;}
+  p.rotation.y=face;
+  if(o.book){p.userData.AL.rotation.x=-1.0;p.userData.AR.rotation.x=-1.0;const bk=rb(p,.36,.26,.04,'#2F6BFF',0,1.12,.42,{role:'paint',r:.01});bk.rotation.x=-.5;}
+  else if(o.phone){p.userData.AR.rotation.x=-1.6;p.userData.AL.rotation.x=-.2;rb(p,.08,.15,.015,'#1D1E1F',.18,1.42,.36,{role:'paint',r:.006});}
+  else{p.userData.AL.rotation.x=-.45;p.userData.AR.rotation.x=-.45;}
+  scene.add(p);return p;}
 function townLife(){FLW=[];AVOID=[];
   const at=(x,z,ry,dx,dz)=>[x+dx*Math.cos(ry)+dz*Math.sin(ry),z-dx*Math.sin(ry)+dz*Math.cos(ry)];
   // awnings over each door, with flower beds either side
@@ -1000,14 +1029,17 @@ function townLife(){FLW=[];AVOID=[];
    rb(scene,.34,.2,.24,'#C9A47E',...[at(X,Z,R,1.55,-.2)].map(([a,b])=>[a,.1,b]).flat(),{role:'wood',r:.03});const sn=box(scene,.3,.05,.22,'#E8503A',...[at(X,Z,R,-1.45,.45)].map(([a,b])=>[a,.05,b]).flat(),{role:'paint'});sn.rotation.y=R;}
   // front right: sunbather on a blue blanket with a beach ball
   blanket(6.1,6.7,-.4,'#6B8FD6','#FFFFFF',2.4,1.2);AVOID.push([6.1,6.7,1.35]);lounger(6.15,6.7,-.4,'#E8503A','#F4F1EC',2);beachball(4.7,7.3);
-  // back left: reading under a tree
-  lounger(-6.6,1.7,1.1,'#7DB35A','#2E3846',3,{book:1});AVOID.push([-6.6,1.7,1.0]);
+  // back left: a striped hammock strung between two trees, someone napping in it
+  {const HX=-6.5,HZ=.5;tree(HX-1.3,HZ,1.05,0);tree(HX+1.3,HZ,1.0,1);const hg=new THREE.Group();hg.position.set(HX,0,HZ);hg.rotation.y=Math.PI/2;scene.add(hg);hammock(0,-1.05,1.05,1.15,.55,hg);
+   const hp=lounger(HX-.05,HZ,0,'#7DB35A','#2E3846',3);hp.position.y=.62;hp.rotation.z=.04;}
+  // leaning on trees: one reading with their back against the middle tree, one standing on their phone by the front-right tree
+  leanOnTree(0,-1.6,0,{sit:1,book:1});leanOnTree(8.0,4.4,-.35,{phone:1,d:.42});
   // a frisbee game across the middle: thrower on the right, catcher between the buildings
   const f=person();f.position.set(6.4,0,2.4);f.rotation.y=-1.75;f.userData.AR.rotation.x=-2.4;scene.add(f);
-  const cch=person();cch.position.set(0,0,1.6);cch.rotation.y=1.45;cch.userData.AL.rotation.x=-2.2;cch.userData.AR.rotation.x=-1.5;scene.add(cch);
-  const fr=cyl(scene,.16,.16,.03,'#F28AA6',1.3,1.75,2.3,{role:'paint'});fr.rotation.set(.15,0,.25);
-  // front middle-left: one more student lying in the sun
-  lounger(-2.6,8.1,-.15,'#B48CE8','#2E3846',1);AVOID.push([-2.6,8.1,1.0]);
+  const cch=person();cch.position.set(-.95,0,2.25);cch.rotation.y=1.45;cch.userData.AL.rotation.x=-2.2;cch.userData.AR.rotation.x=-1.5;scene.add(cch);
+  const fr=cyl(scene,.16,.16,.03,'#F28AA6',-.2,1.75,2.4,{role:'paint'});fr.rotation.set(.15,0,.25);
+  // front middle-left: two friends working at a picnic table
+  picnicTable(-2.4,7.9,.12);AVOID.push([-2.4,7.9,1.3]);
   // wildflower patches across the grass
   [[-3.6,6.9],[2.4,7.9],[-7.3,4.0],[7.3,4.6],[-2.4,-1.9],[2.2,-2.1],[6.8,-.9],[-6.9,-1.2],[4.9,.2],[-4.8,-.1],[0,-2.9],[-8.2,6.9]].forEach(([x,z],i)=>flowers(x,z,7+i%4,.38));
   buildFlora();buildGrass();
@@ -1017,7 +1049,7 @@ function buildTown(){disposeScene();scene=new THREE.Scene();scene.background=new
   const gr=new THREE.Mesh(new THREE.CircleGeometry(120,64),new THREE.MeshStandardMaterial({color:'#FFFFFF',roughness:.95,map:canvasTex(256,256,(x,w,h)=>{x.fillStyle='#8DBA4E';x.fillRect(0,0,w,h);for(let i=0;i<3200;i++){const r=Math.random();x.fillStyle=r<.45?'rgba(60,105,35,.22)':r<.8?'rgba(185,215,120,.2)':'rgba(120,160,70,.25)';x.save();x.translate(Math.random()*w,Math.random()*h);x.rotate(Math.random()*.6-.3);x.fillRect(0,0,1.2,3+Math.random()*7);x.restore();}},{repeat:[60,60]})}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;scene.add(gr);
   const walk=new THREE.Mesh(new THREE.PlaneGeometry(18,1.6),new THREE.MeshStandardMaterial({color:'#EFE4CC',roughness:.9}));walk.rotation.x=-Math.PI/2;walk.position.set(0,.005,3.6);walk.receiveShadow=true;scene.add(walk);
   BLD={};['dorm','studio'].forEach(t=>{const b=building(t);scene.add(b);BLD[t]=b;});
-  tree(-6.2,-.5,1.1,0);tree(0,-1.6,.9,1);tree(6.2,.2,1.15,1);tree(-4.2,-2.4,.95,1);tree(4.3,-2.6,1.05,0);tree(-7.3,5.6,1.2,1);tree(8.0,4.4,1.1,0);
+  tree(0,-1.6,.9,1);tree(6.2,.2,1.15,1);tree(-4.2,-2.4,.95,1);tree(4.3,-2.6,1.05,0);tree(-7.3,5.6,1.2,1);tree(8.0,4.4,1.1,0,.85);
   townLife();
   P=person();P.position.set(0,0,6.4);P.rotation.y=Math.PI;scene.add(P);
   ITEMS={};if(composer){composer.passes[0].scene=scene;gtao.scene=scene;}frame();}
@@ -1220,7 +1252,7 @@ function renderQuizChrome(busy){if(!$('qside'))return;const q=QZ[QI];const cur=q
    ${q.o.map(([v,b,sm],i)=>`<button class="qi-o ${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><span class="k">${'ABC'[i]}</span><span><b>${b}</b><small>${sm}</small></span></button>`).join('')}
    <button class="qi-sk" data-qskip>Skip this question →</button>`;
   $('qbar').innerHTML=`<span class="prog">${QZ.map((_,i)=>`<i class="${i<=QI?'on':''}"></i>`).join('')}</span><span>${busy?'Building your room':`Question ${QI+1} of ${QZ.length}`}</span>${busy?'':`<button data-qskip>Skip question</button><button class="dark" data-qexit>Skip to shop</button>`}`;
-  $('bubble').innerHTML=busy?`<div class="ph"><span class="tag">ALMOST DONE</span><span>You</span></div><p>Picking the pieces that fit…</p>`:`<div class="ph"><span class="tag">NEEDS YOU</span><span>Question ${QI+1} of ${QZ.length}</span></div><p>${q.t}</p><div class="bb">${q.o.map(([v,b])=>`<button class="${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1">${b}</button>`).join('')}</div>`;
+  $('bubble').innerHTML=busy?`<div class="ph"><span class="tag">ALMOST DONE</span><span>You</span></div><p>Picking the pieces that fit…</p>`:`<div class="ph"><span class="tag">NEEDS YOU</span><span>Question ${QI+1} of ${QZ.length}</span></div><p>${q.t}</p><div class="bb">${q.o.map(([v,b,sm])=>`<button class="${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><b>${b}</b>${sm?`<small>${sm}</small>`:''}</button>`).join('')}</div>`;
   $('bubble').classList.add('show');}
 function tlHTML(steps,at,busy){return `<div class="qi-t"><h5>What happens</h5>${steps.map(([b,sm,i])=>{const st=i<at?'ok':i===at?'cur':'';return `<div class="tl ${st}"><i>${st==='ok'?'✓':''}</i><b>${b}</b><small>${sm}</small>${busy&&i===at?'<span class="pb"><i></i></span>':''}</div>`}).join('')}</div>`;}
 function placeBubble(){if(VIEW!=='quiz'||!P||innerWidth<760)return;const town=MODE==='town';const v=P.position.clone().add(new THREE.Vector3(town?.25:0,town?1.1:2.0,0)).project(cam);const b=$('bubble');b.classList.toggle('right',town);b.style.visibility='';b.style.left=((v.x+1)/2*innerWidth)+'px';b.style.top=((1-v.y)/2*innerHeight)+'px';}
