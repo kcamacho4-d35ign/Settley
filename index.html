@@ -335,6 +335,22 @@ body[data-view="home"]{background:transparent}
 
 /* ---- Quiz: app layout (steps · 3D with speech bubble · answers) ---- */
 .qside,.qinsp,.qbar,.bubble{display:none}
+.qintro{display:none}
+body[data-view="quiz"].qintro-on .qintro{display:grid;position:fixed;inset:0;z-index:12;place-items:end center;padding:0 20px clamp(28px,8vh,90px);background:linear-gradient(180deg,rgba(244,245,247,0) 35%,rgba(244,245,247,.55));animation:qiIn .5s ease both}
+body[data-view="quiz"].qintro-on .bubble,body[data-view="quiz"].qintro-on .qbar,body[data-view="quiz"].qintro-on .qpanel{display:none!important}
+.qi-card{width:min(640px,100%);background:rgba(255,255,255,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:30px;padding:30px 32px 26px;box-shadow:0 0 0 1px rgba(255,255,255,.8),0 30px 70px -30px rgba(40,60,30,.45);text-align:left}
+.qi-eb{font-size:14px;color:var(--mu);font-weight:500}
+.qi-card h2{font-size:clamp(30px,4vw,42px);font-weight:500;letter-spacing:-.045em;line-height:1.02;margin:8px 0 12px;text-wrap:balance}
+.qi-tx{font-size:16px;color:var(--ink2);max-width:540px;text-wrap:pretty}
+.qi-steps{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px;padding:0}
+.qi-steps li{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;background:var(--tile);border-radius:999px;padding:6px 14px 6px 6px}
+.qi-steps b{width:24px;height:24px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:12px}
+.qi-act{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.qi-skip{font-size:15px;font-weight:500;color:var(--ink2);min-height:44px}.qi-skip:hover{color:var(--ink)}
+.qi-mut{font-size:13px;color:var(--mu);margin-top:14px}
+@keyframes qiIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body[data-view="quiz"].qintro-on .qintro{animation:none}}
+@media (max-width:600px){.qi-card{padding:24px 22px 20px}.qi-steps li{font-size:13px}}
 @media (min-width:760px){
   body[data-view="quiz"] .qbar{display:flex}
   body[data-view="quiz"] .bubble.show{display:block}
@@ -589,7 +605,13 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
   <div class="pop" id="pop"></div>
 </div>
 
-<div class="quiz-ui"><aside class="qside panel" id="qside"></aside><aside class="qinsp panel" id="qinsp"></aside><div class="qbar glass" id="qbar"></div><div class="bubble" id="bubble"></div><section class="qpanel" id="qpanel"></section></div>
+<div class="quiz-ui"><div class="qintro" id="qintro" role="dialog" aria-labelledby="qiT"><div class="qi-card">
+  <p class="qi-eb">Settly · Move-in quiz</p>
+  <h2 id="qiT">Let’s set up your first dorm.</h2>
+  <p class="qi-tx">Four quick questions. Pick your building, walk inside, and we’ll fill the room with pieces that fit, leaving out anything your dorm already gives you.</p>
+  <ol class="qi-steps"><li><b>1</b>Type of place</li><li><b>2</b>Room size</li><li><b>3</b>What’s provided</li><li><b>4</b>Bed size</li></ol>
+  <div class="qi-act"><button class="btn green lg" id="qiGo">Start the quiz</button><button class="qi-skip" data-go="shop">Skip to the shop</button></div>
+  <p class="qi-mut">About 30 seconds · you can change answers later</p></div></div><aside class="qside panel" id="qside"></aside><aside class="qinsp panel" id="qinsp"></aside><div class="qbar glass" id="qbar"></div><div class="bubble" id="bubble"></div><section class="qpanel" id="qpanel"></section></div>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Cart"></aside>
@@ -1275,7 +1297,8 @@ function renderQ(anim=true){renderQuizChrome(false);const q=QZ[QI];const cur=q.i
   <div class="qfoot"><span>Not sure? Skip it — you can change this later.</span><button data-qskip>Skip question →</button></div>`;
   if(anim){$('qpanel').classList.remove('anim');void $('qpanel').offsetWidth;$('qpanel').classList.add('anim');}}
 function enterRoomFromTown(){stage.classList.add('fade');setTimeout(()=>{S.room='bedroom';const {W,D}=dims();buildRoom({quiz:true,person:[-4+W*.7,-3+D-.35]});stage.classList.remove('fade');QI=1;QBUSY=false;renderQ();requestAnimationFrame(()=>frame());const s=spot(1);walkTo(s[0],s[1],1000);},420);}
-function startQuiz(){QI=0;QBUSY=false;QDONE={};renderQ();buildTown();requestAnimationFrame(()=>frame());}
+function startQuiz(){QI=0;QBUSY=false;QDONE={};document.body.classList.add('qintro-on');renderQ();buildTown();requestAnimationFrame(()=>frame());}
+function closeIntro(){document.body.classList.remove('qintro-on');renderQ();requestAnimationFrame(()=>frame());}
 function answer(v){if(QBUSY)return;const q=QZ[QI];QBUSY=true;QDONE[q.id]=true;S[q.id]=v;save();renderQ(false);$('bubble').classList.remove('show');
   if(q.id==='home'){highlightBuilding(v);walkTo(BX[v],2.2,1500,enterRoomFromTown);return;}
   const here=P?[P.position.x,P.position.z]:spot(QI);
@@ -1395,14 +1418,15 @@ function go(v,fromHash){if(!['home','shop','room','quiz','checkout'].includes(v)
   if(v==='home'){renderHome();const SHOW=['sofa','coffee','rug','floorlamp','plant','shelf','wallart','armchair','sidetable','throw'];buildRoom({room:'living',items:SHOW,show:new Set(SHOW),quiz:true});HOMET=performance.now();}
   if(v==='shop')renderShop();
   if(v==='room'){if(!homeRooms().includes(S.room))S.room=homeRooms()[0];renderRoomUI();buildRoom();requestAnimationFrame(()=>frame());}
-  if(v==='quiz')startQuiz();
+  if(v==='quiz')startQuiz();else document.body.classList.remove('qintro-on');
   if(v==='checkout')renderCO();
   needs=6;window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));}
 addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(v&&v!==VIEW)go(v,true);});
 
 /* ================= EVENTS ================= */
 document.addEventListener('click',e=>{
-  const g=e.target.closest('[data-go]');if(g){e.preventDefault();openCart(false);go(g.dataset.go);return;}
+  if(e.target.closest('#qiGo')){closeIntro();return;}
+  const g=e.target.closest('[data-go]');if(g){e.preventDefault();openCart(false);if(g.dataset.go!=='quiz')document.body.classList.remove('qintro-on');go(g.dataset.go);return;}
   const ak=e.target.closest('[data-addkit]');if(ak){const kit=KITS.find(x=>x.id===ak.dataset.addkit);kit.items.forEach(i=>S.added.add(i));S.kits.add(kit.id);save();updateCount();refreshTiles();toast(`${kit.n} added · ${kit.items.length} pieces`);return;}
   const vk=e.target.closest('[data-viewkit]');if(vk){const kit=KITS.find(x=>x.id===vk.dataset.viewkit);S.home=kit.home;S.furn=null;kit.items.forEach(i=>S.added.add(i));S.kits.add(kit.id);S.room=homeRooms()[0];save();updateCount();go('room');return;}
   const t=e.target.closest('.tile');if(t){toggle(t.dataset.k);return;}
