@@ -1022,6 +1022,15 @@ function leanOnTree(tx,tz,face,o={}){const p=person({...(o.outfit||{}),pack:fals
   if(o.sit){sitPose(p,-1.57);p.position.set(tx-bx*-.0+bx*.26,-.66,tz+bz*.26);}else{const dd=o.d||.3;p.position.set(tx+bx*dd,0,tz+bz*dd);p.rotation.order='YXZ';p.rotation.x=-.1;p.userData.L.rotation.z=.08;p.userData.R.rotation.z=-.12;}
   p.rotation.y=face;
   if(o.book){p.userData.AL.rotation.x=-1.0;p.userData.AR.rotation.x=-1.0;const bk=rb(p,.36,.26,.04,'#2F6BFF',0,1.12,.42,{role:'paint',r:.01});bk.rotation.x=-.5;}
+  else if(o.study){p.userData.AL.rotation.x=-1.05;p.userData.AR.rotation.x=-1.25;p.userData.AR.rotation.z=.15;
+    // open textbook on the lap: two pages angled up from the spine, a coloured cover underneath
+    const bk=new THREE.Group();bk.position.set(0,.9,.38);bk.rotation.x=-.35;p.add(bk);
+    rb(bk,.46,.02,.32,'#2E4F9E',0,0,0,{role:'paint',r:.006});[-1,1].forEach(sd=>{const pg=rb(bk,.21,.012,.29,'#FBF8F1',sd*.11,.018,0,{role:'paint',r:.004});pg.rotation.z=-sd*.12;});
+    rb(bk,.14,.004,.01,'#9AA3AD',-.11,.032,-.05,{role:'paint',r:.001});rb(bk,.14,.004,.01,'#9AA3AD',-.11,.032,.02,{role:'paint',r:.001});rb(bk,.12,.004,.01,'#F2D04A',.11,.032,-.03,{role:'paint',r:.001});
+    // highlighter in hand
+    const hl=cyl(p,.014,.014,.14,'#F2D04A',.2,1.0,.42,{role:'paint'});hl.rotation.x=1.2;
+    // a stack of books on the grass beside them
+    [['#E8503A',.06],['#F2B632',.05],['#3FA7A0',.055]].forEach(([c,t],i)=>{const b=rb(p,.34,t,.25,c,.55,.67+.01+i*.058,.25,{role:'paint',r:.006});b.rotation.y=.25*i-.2;});}
   else if(o.laptop){p.userData.AL.rotation.x=-1.15;p.userData.AR.rotation.x=-1.15;rb(p,.36,.018,.26,'#C9CDD2',0,.9,.36,{role:'paint',r:.006});const sc=rb(p,.36,.24,.014,'#2A2C2F',0,1.02,.5,{role:'paint',r:.006});sc.rotation.x=.28;}
   else if(o.phone){p.userData.AR.rotation.x=-1.6;p.userData.AL.rotation.x=-.2;rb(p,.08,.15,.015,'#1D1E1F',.18,1.42,.36,{role:'paint',r:.006});}
   else{p.userData.AL.rotation.x=-.45;p.userData.AR.rotation.x=-.45;}
@@ -1036,7 +1045,7 @@ function townLife(){FLW=[];AVOID=[];
   {const HX=-6.5,HZ=.5;tree(HX-1.3,HZ,1.05,0);tree(HX+1.3,HZ,1.0,1);const hg=new THREE.Group();hg.position.set(HX,0,HZ);hg.rotation.y=Math.PI/2;scene.add(hg);hammock(0,-1.05,1.05,1.15,.55,hg);
    const hp=lounger(HX-.05,HZ,0,'#3FA7A0','#F4F1EC',3);hp.scale.setScalar(.82);hp.position.y=.64;}
   // leaning on trees: one reading with their back against the middle tree, one standing on their phone by the front-right tree
-  tree(-4.6,8.5,1.0,0,.55);leanOnTree(8.0,5.2,-.35,{sit:1,laptop:1,outfit:{shirt:'#2F6BFF',pants:'#E8E2D6',skin:'#D9B08C',hair:'#5A3A24'}});leanOnTree(-4.6,8.5,.35,{sit:1,book:1,outfit:{shirt:'#7DB35A',pants:'#C9B79C',skin:'#7A4E33',hair:'#1B1B1B'}});
+  tree(-4.6,8.5,1.0,0,.55);leanOnTree(8.0,5.2,-.35,{sit:1,study:1,outfit:{shirt:'#2F6BFF',pants:'#E8E2D6',skin:'#D9B08C',hair:'#5A3A24'}});leanOnTree(-4.6,8.5,.35,{sit:1,book:1,outfit:{shirt:'#7DB35A',pants:'#C9B79C',skin:'#7A4E33',hair:'#1B1B1B'}});
   // a frisbee game across the middle: thrower on the right, catcher between the buildings
   const f=person({shirt:'#B48CE8',pants:'#2E3846',skin:'#E7C3A0',hair:'#2A221C',pack:false});f.position.set(6.4,0,2.4);f.rotation.y=-1.75;f.userData.AR.rotation.x=-2.4;scene.add(f);
   const cch=person({shirt:'#F59AB4',pants:'#6B8FD6',skin:'#A87452',hair:'#2A221C',pack:false});cch.position.set(-.95,0,2.25);cch.rotation.y=1.45;cch.userData.AL.rotation.x=-2.2;cch.userData.AR.rotation.x=-1.5;scene.add(cch);
