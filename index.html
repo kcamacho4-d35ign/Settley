@@ -1139,10 +1139,10 @@ function renderQuizChrome(busy){if(!$('qside'))return;const q=QZ[QI];const cur=q
   ${QZ.map((z,i)=>{const st=busy||QDONE[z.id]&&i!==QI?'done':i===QI?'cur':'pend';const a=ansText(z.id);return `<button class="qs-step ${st}" ${st==='done'&&!busy?`data-qgo="${i}"`:''}><span class="ic">${QICON[z.id]}</span><span><b>${QLABEL[z.id]}</b><small>${a||(i===QI&&!busy?'Waiting for you':'Not answered')}</small></span><span class="st">${st==='done'?'✓':''}</span></button>`}).join('')}
   <div class="grow"></div><div class="place"><b>Skip it all?</b>Head straight to the shop and add pieces yourself.<br><button data-qexit>Go to shop →</button></div>`;
   const steps=[['Walk to your building','Pick a place to move into',0],['Size the room','Walls and floor match your answer',1],['Bring in what’s provided','We leave those out of your kit',2],['Fit the bed','Frame and bedding sized to match',3],['Build your starter kit','Pieces that fit your room',4]];
-  $('qinsp').innerHTML=busy?`<div class="qi-h"><span>Almost done</span></div><div class="qi-q">Picking the pieces that fit your room…</div>`+tlHTML(steps,4,true):
+  $('qinsp').innerHTML=busy?`<div class="qi-h"><span>Almost done</span></div><div class="qi-q">Picking the pieces that fit your room…</div>`:
    `<div class="qi-h"><span>Question ${QI+1} of ${QZ.length}</span>${QI?'<button data-qback style="color:var(--ink2)">← Back</button>':''}</div><div class="qi-q">${q.t}</div><div class="qi-s">${q.s}</div>
    ${q.o.map(([v,b,sm],i)=>`<button class="qi-o ${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><span class="k">${'ABC'[i]}</span><span><b>${b}</b><small>${sm}</small></span></button>`).join('')}
-   <button class="qi-sk" data-qskip>Skip this question →</button>`+tlHTML(steps,QI,false);
+   <button class="qi-sk" data-qskip>Skip this question →</button>`;
   $('qbar').innerHTML=`<span class="prog">${QZ.map((_,i)=>`<i class="${i<=QI?'on':''}"></i>`).join('')}</span><span>${busy?'Building your room':`Question ${QI+1} of ${QZ.length}`}</span>${busy?'':`<button data-qskip>Skip question</button><button class="dark" data-qexit>Skip to shop</button>`}`;
   $('bubble').innerHTML=busy?`<div class="ph"><span class="tag">ALMOST DONE</span><span>You</span></div><p>Picking the pieces that fit…</p>`:`<div class="ph"><span class="tag">NEEDS YOU</span><span>Question ${QI+1} of ${QZ.length}</span></div><p>${q.t}</p><div class="bb">${q.o.map(([v,b])=>`<button class="${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1">${b}</button>`).join('')}</div>`;
   $('bubble').classList.add('show');}
