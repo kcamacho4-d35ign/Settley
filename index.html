@@ -566,6 +566,31 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
   .bubble .bb button{min-height:54px;padding:10px 14px}
   .qi-card .btn.lg{flex:1;justify-content:center}
   body[data-view="quiz"].qintro-on .qintro{padding-bottom:calc(16px + var(--sab))}
+  /* checkout: full bleed sections, one field per row, nothing spills out of its box */
+  body[data-view="checkout"]{background:#ECEEF1}
+  .co{padding:0 0 calc(36px + var(--sab));gap:0}
+  .co-top{padding:18px 16px 14px;gap:14px}
+  .co-top h1{font-size:40px}
+  .cost{width:100%;justify-content:space-between;padding:4px}.cost button{flex:1;justify-content:center;padding:0 8px;gap:6px;font-size:13px;min-width:0}
+  .cobox,.sum,.dhero{border-radius:0;box-shadow:none;margin:0 0 8px;padding:22px 16px}
+  .codone{gap:0}.codone .rc2{gap:0}
+  .sum{position:static}
+  .frow,.frow.w3{grid-template-columns:minmax(0,1fr);gap:12px}
+  .frow.csz{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.frow.csz>.fld:first-child{grid-column:1/-1}
+  .fld{min-width:0}.fld input,.fld textarea{width:100%;min-width:0;box-sizing:border-box}
+  .fld span{overflow-wrap:anywhere}
+  .cobox .hd{flex-wrap:wrap;row-gap:4px}
+  .meth{align-items:flex-start;padding:14px 14px}.meth>span{flex:1;min-width:0}.meth small{display:block;overflow-wrap:anywhere}.meth em{flex:none;padding-left:8px}
+  .chips button{flex:1 1 calc(50% - 8px);padding:0 10px;font-size:13px}
+  .ptabs{width:100%}.ptabs button{flex:1}
+  .cardviz{max-width:none}
+  .rv{grid-template-columns:minmax(0,1fr)}.rv div{padding-right:58px;overflow-wrap:anywhere}
+  .promo input{min-width:0}
+  .days{margin:14px -16px 0;padding:4px 16px 8px;scroll-padding-left:16px}
+  .sl2 .t b{white-space:normal}
+  .cofoot{padding:6px 16px 0;gap:12px;flex-wrap:wrap}.cofoot .btn{flex:1;justify-content:center;min-width:0}
+  .dhero h2{font-size:38px}.dhero .btn{flex:1;justify-content:center}
+  .proto{max-width:none}
 }
 </style>
 <script type="importmap">
@@ -1418,7 +1443,7 @@ function renderCO(){const T=coTotals(),d=CO.d,p=CO.p,days=coDays();let body='';
   if(CO.step===1)body=`<div class="cobox"><div class="hd"><h4>Contact</h4><button class="link" id="testInfo">Use test information</button></div><div class="frow">${fld('name','Full name',d.name,'Alex Kim')}${fld('email','Email',d.email,'you@school.edu','type="email"')}</div></div>
    <div class="cobox"><h4>Where are we delivering?</h4><p class="hint">Your ${HOMES[S.home].n.toLowerCase()} — add the hall and room number if you have one.</p>
     <div class="frow w3">${fld('street','Street address',d.street,'123 College Ave')}${fld('unit','Apt / dorm room',d.unit,'Hall B, Rm 214')}</div>
-    <div class="frow">${fld('city','City',d.city,'New York')}${fld('st','State',d.st,'NY','maxlength="2"')}${fld('zip','ZIP code',d.zip,'10027','inputmode="numeric" maxlength="5"')}</div></div>
+    <div class="frow csz">${fld('city','City',d.city,'New York')}${fld('st','State',d.st,'NY','maxlength="2"')}${fld('zip','ZIP code',d.zip,'10027','inputmode="numeric" maxlength="5"')}</div></div>
    <div class="cobox"><h4>Delivery day</h4><p class="hint">Pick your move-in day — everything arrives together.</p>
     <div class="days">${days.map((x,i)=>`<button class="${d.date===i?'on':''}" data-day="${i}"><small>${DAYN[x.getDay()]}</small><b>${x.getDate()}</b><small>${MONN[x.getMonth()]}</small></button>`).join('')}</div>
     <div class="chips">${SLOTS.map((t,i)=>`<button class="${d.slot===i?'on':''}" data-slot="${i}">${t}</button>`).join('')}</div></div>
