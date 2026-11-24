@@ -68,11 +68,12 @@ body[data-view="room"] .nav,body[data-view="quiz"] .nav{background:rgba(255,255,
 .choose{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .choice{text-align:left;border-radius:28px;background:var(--tile);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .choice:hover{transform:translateY(-4px)}
-.choice .cv{height:370px;padding:44px 24px 28px;box-sizing:border-box;position:relative;display:grid;place-items:center;overflow:hidden}
-.choice .ct{padding:26px 30px 30px;display:flex;flex-direction:column;gap:8px}
-.choice h2{font-size:34px;font-weight:500;letter-spacing:-.045em;line-height:1}
+.choice .ch{padding:32px 32px 0;display:flex;flex-direction:column;gap:10px}
+.choice .cv{height:320px;padding:24px 24px 20px;box-sizing:border-box;position:relative;display:grid;place-items:center;overflow:hidden}
+.choice .ct{margin-top:auto;padding:0 32px 30px}
+.choice h2{font-size:40px;font-weight:500;letter-spacing:-.045em;line-height:1}
 .choice p{color:var(--ink2);font-size:16px;max-width:420px}
-.choice .row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px}
+.choice .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .choice .row span.muted{font-size:15px}
 .steps{display:flex;flex-direction:column;gap:10px;width:min(380px,82%)}
 .steps span{display:flex;align-items:center;gap:14px;background:#fff;border-radius:16px;padding:15px 18px;font-size:16px;font-weight:500}
@@ -91,8 +92,8 @@ body[data-view="room"] .nav,body[data-view="quiz"] .nav{background:rgba(255,255,
 .kit .kv img{position:absolute;inset:4%;width:92%;height:92%;object-fit:contain;opacity:0;transition:opacity .5s}
 .kit .kv img.ok{opacity:1}
 .kit .kc{padding:34px 34px 30px;display:flex;flex-direction:column}
-.kit .who{font-size:15px;color:var(--mu)}
-.kit h4{font-size:40px;font-weight:500;letter-spacing:-.05em;line-height:1;margin-top:8px}
+.kit .who{display:block;font-size:15px;color:var(--mu);margin-top:10px}
+.kit h4{font-size:40px;font-weight:500;letter-spacing:-.05em;line-height:1;margin:0}
 .kit .kd{color:var(--ink2);font-size:16px;margin-top:12px}
 .kit ul{list-style:none;margin:20px 0 0;display:flex;flex-wrap:wrap;gap:6px}
 .kit li{font-size:14px;background:var(--bg);border-radius:999px;padding:6px 12px;color:var(--ink2)}
@@ -481,7 +482,7 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
 @media (max-width:1100px){.mas{column-count:4}.setup{display:none}.qbar .prog{display:none}.bubble{width:210px!important}.bubble .bb{display:none}}
 @media (min-width:760px){body[data-view="room"] .zoom{top:96px;transform:none;flex-direction:row}.zoom i{width:1px;height:auto;margin:10px 2px}}
 @media (max-width:860px){
-  .mas{column-count:3}.choose{grid-template-columns:1fr}.choice .cv{height:auto;min-height:230px;padding:32px 18px 20px}
+  .mas{column-count:3}.choose{grid-template-columns:1fr}.choice .cv{height:auto;min-height:230px;padding:20px 18px 16px}.choice .ch{padding:24px 22px 0}.choice .ct{padding:0 22px 24px}.choice h2{font-size:32px}
   .kit{grid-template-columns:1fr}.kit .kv{aspect-ratio:16/10}.kit .kc{padding:24px}
   .hdr{grid-template-columns:auto 1fr;gap:10px}.hdr .nav{display:none}
   .qopts{grid-template-columns:1fr;gap:8px}.qopt{padding:13px 16px}
@@ -526,19 +527,19 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
   </section>
   <section class="choose">
     <button class="choice" data-go="quiz">
+      <div class="ch"><h2>Take the quiz</h2><p>Walk into your new place, then we fill it with the pieces that fit.</p></div>
       <div class="cv"><div class="steps">
         <span><b>1</b>Type of place</span>
         <span><b>2</b>Room size</span>
         <span><b>3</b>What’s provided</span>
         <span><b>4</b>Bed size</span>
       </div></div>
-      <div class="ct"><h2>Take the quiz</h2><p>Walk into your new place, then we fill it with the pieces that fit.</p>
-        <div class="row"><span class="muted">4 questions, about 30 seconds</span><span class="btn green">Start quiz</span></div></div>
+      <div class="ct"><div class="row"><span class="muted">4 questions, about 30 seconds</span><span class="btn green">Start quiz</span></div></div>
     </button>
     <button class="choice" data-go="shop">
+      <div class="ch"><h2>Browse the shop</h2><p>Every piece for every room. Add what you like and see it in your room in 3D.</p></div>
       <div class="cv"><div class="quad" id="quad"></div></div>
-      <div class="ct"><h2>Browse the shop</h2><p>Every piece for every room. Add what you like and see it in your room in 3D.</p>
-        <div class="row"><span class="muted" id="shopCount">All pieces</span><span class="btn dark">Open shop</span></div></div>
+      <div class="ct"><div class="row"><span class="muted" id="shopCount">All pieces</span><span class="btn dark">Open shop</span></div></div>
     </button>
   </section>
   <section class="sec">
@@ -1012,7 +1013,7 @@ const KITS=[
 const kitPrice=kit=>{const full=kit.items.reduce((s,i)=>s+price(i),0);return [full,Math.round(full*.85/10)*10-1];};
 function renderHome(){$('quad').innerHTML=['sofa','floorlamp','armchair','plant'].map(k=>`<div>${imgTag(k)}</div>`).join('');
   $('shopCount').textContent=`${KEYS.length} pieces, 4 rooms`;
-  $('kits').innerHTML=KITS.map(k=>{const [full,p]=kitPrice(k);const key='kit:'+k.id;return `<article class="kit"><div class="kv"><img data-k="${key}" alt="" ${TH[key]?`src="${TH[key]}" class="ok"`:''}></div><div class="kc"><span class="who">${k.who}</span><h4>${k.n}</h4><p class="kd">${k.d}</p><ul>${k.items.map(i=>`<li>${nameOf(i)}</li>`).join('')}</ul><div class="kp"><b>${money(p)}</b><s>${money(full)}</s><em>Save ${money(full-p)}</em></div><div class="kb"><button class="btn green" data-addkit="${k.id}">Add kit to cart</button><button class="btn soft" data-viewkit="${k.id}">See it in 3D</button></div></div></article>`}).join('');
+  $('kits').innerHTML=KITS.map(k=>{const [full,p]=kitPrice(k);const key='kit:'+k.id;return `<article class="kit"><div class="kv"><img data-k="${key}" alt="" ${TH[key]?`src="${TH[key]}" class="ok"`:''}></div><div class="kc"><h4>${k.n}</h4><span class="who">${k.who}</span><p class="kd">${k.d}</p><ul>${k.items.map(i=>`<li>${nameOf(i)}</li>`).join('')}</ul><div class="kp"><b>${money(p)}</b><s>${money(full)}</s><em>Save ${money(full-p)}</em></div><div class="kb"><button class="btn green" data-addkit="${k.id}">Add kit to cart</button><button class="btn soft" data-viewkit="${k.id}">See it in 3D</button></div></div></article>`}).join('');
   KITS.forEach(k=>queueThumb('kit:'+k.id,true));['plant','armchair','floorlamp','sofa'].forEach(k=>queueThumb(k,true));}
 function renderShop(){const rooms=['all','bedroom','living','kitchen','bathroom'];const list=KEYS.filter(k=>S.filter==='all'||I[k].room===S.filter).sort((a,b)=>PRI.indexOf(a)-PRI.indexOf(b));
   $('filters').innerHTML=rooms.map(r=>`<button data-f="${r}" class="${S.filter===r?'on':''}">${r==='all'?'All':ROOMNAME[r].replace(' room','')}<small>${r==='all'?KEYS.length:KEYS.filter(k=>I[k].room===r).length}</small></button>`).join('');
