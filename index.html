@@ -270,6 +270,9 @@ body[data-view="home"] .kit li{background:rgba(255,255,255,.4)}
 body[data-view="home"] .btn.soft{background:rgba(255,255,255,.45)}
 body[data-view="home"] footer{border-top-color:rgba(255,255,255,.5);color:var(--ink2)}
 body[data-view="home"]{background:transparent}
+/* frosted veil: fades in over the 3D room once you scroll past the hero, so text never sits on busy furniture */
+#veil{display:none;position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;background:rgba(244,245,247,.6);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2)}
+body[data-view="home"] #veil{display:block}
 
 /* ---- My room: app layout (rooms list · 3D · kit inspector) ---- */
 .side,.insp{display:none}
@@ -660,6 +663,7 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
 
 <!-- ============ 3D ============ -->
 <div id="stage"></div>
+<div id="veil"></div>
 
 <div class="room-ui">
   <aside class="side panel" id="side"></aside>
@@ -1025,7 +1029,7 @@ function stepWalk(now){if(!WALK||!P)return;const t=Math.min(1,(now-WALK.t0)/WALK
   if(t>=1){const cb=WALK.cb;WALK=null;cb&&cb();}}
 
 /* ================= TOWN (quiz step 1) ================= */
-function label(text){const cv=document.createElement('canvas');cv.width=512;cv.height=112;const x=cv.getContext('2d');x.fillStyle='#111';x.beginPath();x.roundRect(0,0,512,112,56);x.fill();x.fillStyle='#fff';x.font='500 50px "Geist", system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(text,256,60);
+function label(text){const cv=document.createElement('canvas');cv.width=512;cv.height=112;const x=cv.getContext('2d');x.fillStyle='#111';x.beginPath();x.roundRect(0,0,512,112,56);x.fill();x.fillStyle='#fff';x.font='500 50px "GT Maru", system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(text,256,60);
   const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;return new THREE.Mesh(new THREE.PlaneGeometry(2.3,.5),new THREE.MeshBasicMaterial({map:t,transparent:true}));}
 const BX={dorm:-2.8,studio:2.8};
 const BRK={};
@@ -1511,7 +1515,9 @@ function go(v,fromHash){if(!['home','shop','room','quiz','checkout'].includes(v)
   if(v==='room'){if(!homeRooms().includes(S.room))S.room=homeRooms()[0];renderRoomUI();buildRoom();requestAnimationFrame(()=>frame());}
   if(v==='quiz')startQuiz();else document.body.classList.remove('qintro-on');
   if(v==='checkout')renderCO();
-  needs=6;window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));}
+  needs=6;window.scrollTo(0,0);requestAnimationFrame(()=>{window.scrollTo(0,0);veil();});}
+function veil(){if(VIEW!=='home')return;const h=innerHeight,p=Math.min(1,Math.max(0,(scrollY-h*.2)/(h*.45)));$('veil').style.opacity=p.toFixed(3);}
+addEventListener('scroll',veil,{passive:true});
 addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(v&&v!==VIEW)go(v,true);});
 
 /* ================= EVENTS ================= */
