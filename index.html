@@ -1186,7 +1186,7 @@ const ease=t=>{const c1=1.4,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,
 function bottomInset(){if(VIEW==='quiz'&&innerWidth>=760)return 76;if(VIEW==='quiz')return ($('bubble').offsetHeight||300)+34;if(VIEW==='room'){const t=$('tray'),tb=innerWidth<760?78:0;return (t.classList.contains('hide')?64:t.offsetHeight+20)+tb;}if(VIEW==='quiz')return $('qpanel').offsetHeight+20;return 0;}
 function frame(instant=true){const w=innerWidth,h=innerHeight;if(!w||!h)return;renderer.setSize(w,h,false);composer&&composer.setSize(w,h);cam.aspect=w/h;
   const d=bottomInset(),wide=(VIEW==='room'||VIEW==='quiz')&&w>=760,top=VIEW==='room'?(wide?84:130):(VIEW==='quiz'&&wide&&MODE!=='town'?190:VIEW==='quiz'?128:72),LI=wide&&VIEW!=='quiz'?(w<1100?242:300):0,RI=wide&&VIEW!=='quiz'?(w<1100?272:340):0;let corners,tgt,az,pol,looseB,topK;
-  if(MODE==='town'){corners=[[-7.4,0,-1.6],[7.4,0,-1.6],[-7.4,0,7.2],[7.4,0,7.2],[-7.1,6.2,-1.6],[7.4,6.2,-1.6]];tgt=new THREE.Vector3(0,1.8,2.2);az=.18;pol=1.2;looseB=0;topK=1;}
+  if(MODE==='town'){corners=[[-4.6,0,-.4],[4.6,0,-.4],[-4.2,0,6.9],[4.2,0,6.9],[-4.4,6.25,-1.4],[4.4,6.25,-1.4]];tgt=new THREE.Vector3(0,1.9,2.6);az=.18;pol=1.2;looseB=0;topK=1;}
   else{const {W,D}=dims();corners=[[-4.22,-.22,-3.22],[-4+W,-.22,-3.22],[-4.22,-.22,-3+D],[-4+W,-.22,-3+D],[-4.22,3.0,-3.22],[-4+W,3.0,-3.22],[-4.22,3.0,-3+D]];tgt=new THREE.Vector3(-4+W/2-.05,1.0,-3+D/2);az=.62;pol=1.12;looseB=VIEW==='quiz'?.15:.85;topK=.3;}
   corners=corners.map(v=>new THREE.Vector3(...v));
   const topL=top*topK,botL=Math.min(h-16,h-d+d*looseB),mid=(topL+botL)/2;
