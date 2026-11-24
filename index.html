@@ -335,6 +335,8 @@ body[data-view="home"]{background:transparent}
 
 /* ---- Quiz: app layout (steps · 3D with speech bubble · answers) ---- */
 .qside,.qinsp,.qbar,.bubble{display:none}
+body[data-view="quiz"] .qbar{display:flex}body[data-view="quiz"] .bubble.show{display:block}body[data-view="quiz"] .qpanel{display:none}
+.qbar .qbk{display:none}
 .qintro{display:none}
 body[data-view="quiz"].qintro-on .qintro{display:grid;position:fixed;inset:0;z-index:12;place-items:end center;padding:0 20px clamp(28px,8vh,90px);background:linear-gradient(180deg,rgba(244,245,247,0) 35%,rgba(244,245,247,.55));animation:qiIn .5s ease both}
 body[data-view="quiz"].qintro-on .bubble,body[data-view="quiz"].qintro-on .qbar,body[data-view="quiz"].qintro-on .qpanel{display:none!important}
@@ -352,9 +354,9 @@ body[data-view="quiz"].qintro-on .bubble,body[data-view="quiz"].qintro-on .qbar,
 @media (prefers-reduced-motion:reduce){body[data-view="quiz"].qintro-on .qintro{animation:none}}
 @media (max-width:600px){.qi-card{padding:24px 22px 20px}.qi-steps li{font-size:13px}}
 @media (min-width:760px){
-  body[data-view="quiz"] .qbar{display:flex}
-  body[data-view="quiz"] .bubble.show{display:block}
-  body[data-view="quiz"] .qpanel{display:none}
+
+
+
 }
 .qside{position:fixed;left:20px;top:84px;bottom:20px;width:var(--lw);z-index:9;flex-direction:column;padding:16px 14px 14px}
 .qs-step{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border-radius:16px;text-align:left;margin-bottom:6px;background:rgba(255,255,255,.55);box-shadow:0 1px 2px rgba(40,50,70,.06)}
@@ -521,6 +523,35 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
   .qpanel{bottom:8px;width:calc(100vw - 16px);padding:18px 16px 16px;border-radius:24px}
   .qfoot span{display:none}
 }
+
+/* ---- Phones: bottom tab bar, speech bubble under the scene, slim quiz bar ---- */
+:root{--sab:env(safe-area-inset-bottom,0px)}
+.tabbar{display:none}
+@media (max-width:759px){
+  .hdr .hr{display:none}
+  body:not([data-view="quiz"]):not([data-view="checkout"]) .tabbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(10px + var(--sab));height:64px;z-index:30;justify-content:space-around;align-items:center;border-radius:22px;background:rgba(255,255,255,.86);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 0 0 1px rgba(255,255,255,.8),0 14px 36px -16px rgba(40,50,70,.35)}
+  .tabbar a,.tabbar button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:64px;height:52px;border-radius:16px;font-size:11.5px;font-weight:500;color:var(--mu)}
+  .tabbar svg{width:22px;height:22px}
+  .tabbar .on{color:var(--ink)}.tabbar .on svg{stroke-width:2.2}
+  .tabbar .tcnt{position:absolute;top:3px;right:12px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--green);color:#fff;font-size:11px;display:grid;place-items:center}
+  #pg-home,#pg-shop{padding-bottom:calc(90px + var(--sab))}
+  body[data-view="room"] .tray{bottom:calc(84px + var(--sab))}
+  body[data-view="room"] .zoom{transform:translateY(-120%)}
+  /* quiz: slim bar under the header */
+  body[data-view="quiz"] .qbar{left:12px;right:12px;top:72px;bottom:auto;transform:none;justify-content:space-between;padding:5px 5px 5px 14px;font-size:13px}
+  .qbar .prog{display:flex!important;margin-right:4px}.qbar .prog i{width:16px}
+  .qbar .ql{display:none}.qbar .prog{flex:1}.qbar .lg{display:none}.qbar .qbk{display:inline-block}
+  .qbar button{height:34px;padding:0 12px;font-size:13px;white-space:nowrap}
+  body[data-view="home"] .stage-gap{padding-bottom:calc(96px + var(--sab))}
+  /* speech bubble: full width under the scene, tail points up at the character */
+  .bubble{width:calc(100vw - 24px)!important;padding:18px 18px 16px;border-radius:24px}
+  .bubble.up:after{top:-7px;bottom:auto;left:var(--tx,50%);transform:translateX(-50%) rotate(45deg)}
+  .bubble p{font-size:21px}
+  .bubble .bb{gap:7px;margin-top:12px}
+  .bubble .bb button{min-height:54px;padding:10px 14px}
+  .qi-card .btn.lg{flex:1;justify-content:center}
+  body[data-view="quiz"].qintro-on .qintro{padding-bottom:calc(16px + var(--sab))}
+}
 </style>
 <script type="importmap">
 {"imports":{
@@ -540,6 +571,12 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
   </nav>
   <div class="hr"><button class="btn dark" id="cartBtn">Cart <span class="cnt" id="cartN">0</span></button></div>
 </header>
+<nav class="tabbar" id="tabbar" aria-label="Main">
+  <a href="#home" data-go="home" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10h-5v-6H9v6z"/></svg>Home</a>
+  <a href="#shop" data-go="shop" data-tab="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9h16l-1.5 11h-13zM8 9V7a4 4 0 0 1 8 0v2"/></svg>Shop</a>
+  <a href="#room" data-go="room" data-tab="room"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6M7 11.5a1.5 1.5 0 1 0 0-.01"/></svg>My room</a>
+  <button type="button" id="tabCart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h3l2 11h11l2-8H7"/><circle cx="9" cy="19" r="1.5"/><circle cx="18" cy="19" r="1.5"/></svg>Cart<span class="tcnt" id="tabCartN">0</span></button>
+</nav>
 
 <!-- ============ HOME ============ -->
 <main id="pg-home" class="page">
@@ -676,7 +713,7 @@ const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');clear
 /* ================= RENDERER ================= */
 const stage=$('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<760?1.5:2));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
 stage.appendChild(renderer.domElement);
@@ -1015,7 +1052,7 @@ function buildFlora(){const n=FLW.length;if(!n)return;
     cens.setMatrixAt(i,H.clone().multiply(Sc.makeScale(.021,.016,.021)));cens.setColorAt(i,c.set(f.cc));});
   [stems,leaves,pets,cens].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;scene.add(m);});}
 function buildGrass(){const G=new THREE.ConeGeometry(.5,1,3,1);G.translate(0,.5,0);
-  const mat=new THREE.MeshStandardMaterial({roughness:.85});const N=24000,im=new THREE.InstancedMesh(G,mat,N);
+  const mat=new THREE.MeshStandardMaterial({roughness:.85});const N=innerWidth<760?11000:24000,im=new THREE.InstancedMesh(G,mat,N);
   const GC=['#6E9E3C','#7FAE47','#8DBA4E','#5F8F35','#9CC65A','#77A843'];const o=new THREE.Object3D(),c=new THREE.Color();
   const skip=(x,z)=>(z>2.75&&z<4.45)||Object.values(BX).some(bx=>Math.abs(x-bx)<1.8&&z>-1.7&&z<2.35)||AVOID.some(([ax,az,r])=>Math.hypot(x-ax,z-az)<r);
   let i=0,tries=0;while(i<N&&tries<140000){tries++;const x=-13+rng()*26,z=-12+rng()*22.5;if(skip(x,z))continue;
@@ -1146,9 +1183,9 @@ function animItem(k,on){const g=ITEMS[k];if(!g)return;g.visible=true;ANIM=ANIM.f
 const ease=t=>{const c1=1.4,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
 
 /* ================= CAMERA FIT ================= */
-function bottomInset(){if(VIEW==='quiz'&&innerWidth>=760)return 76;if(VIEW==='room'){const t=$('tray');return t.classList.contains('hide')?64:t.offsetHeight+20;}if(VIEW==='quiz')return $('qpanel').offsetHeight+20;return 0;}
+function bottomInset(){if(VIEW==='quiz'&&innerWidth>=760)return 76;if(VIEW==='quiz')return ($('bubble').offsetHeight||300)+34;if(VIEW==='room'){const t=$('tray'),tb=innerWidth<760?78:0;return (t.classList.contains('hide')?64:t.offsetHeight+20)+tb;}if(VIEW==='quiz')return $('qpanel').offsetHeight+20;return 0;}
 function frame(instant=true){const w=innerWidth,h=innerHeight;if(!w||!h)return;renderer.setSize(w,h,false);composer&&composer.setSize(w,h);cam.aspect=w/h;
-  const d=bottomInset(),wide=(VIEW==='room'||VIEW==='quiz')&&w>=760,top=VIEW==='room'?(wide?84:130):(VIEW==='quiz'&&wide&&MODE!=='town'?190:72),LI=wide&&VIEW!=='quiz'?(w<1100?242:300):0,RI=wide&&VIEW!=='quiz'?(w<1100?272:340):0;let corners,tgt,az,pol,looseB,topK;
+  const d=bottomInset(),wide=(VIEW==='room'||VIEW==='quiz')&&w>=760,top=VIEW==='room'?(wide?84:130):(VIEW==='quiz'&&wide&&MODE!=='town'?190:VIEW==='quiz'?128:72),LI=wide&&VIEW!=='quiz'?(w<1100?242:300):0,RI=wide&&VIEW!=='quiz'?(w<1100?272:340):0;let corners,tgt,az,pol,looseB,topK;
   if(MODE==='town'){corners=[[-7.4,0,-1.6],[7.4,0,-1.6],[-7.4,0,7.2],[7.4,0,7.2],[-7.1,6.2,-1.6],[7.4,6.2,-1.6]];tgt=new THREE.Vector3(0,1.8,2.2);az=.18;pol=1.2;looseB=0;topK=1;}
   else{const {W,D}=dims();corners=[[-4.22,-.22,-3.22],[-4+W,-.22,-3.22],[-4.22,-.22,-3+D],[-4+W,-.22,-3+D],[-4.22,3.0,-3.22],[-4+W,3.0,-3.22],[-4.22,3.0,-3+D]];tgt=new THREE.Vector3(-4+W/2-.05,1.0,-3+D/2);az=.62;pol=1.12;looseB=VIEW==='quiz'?.15:.85;topK=.3;}
   corners=corners.map(v=>new THREE.Vector3(...v));
@@ -1247,7 +1284,7 @@ function renderPanels(){if(!$('side'))return;const rooms=HOMES[S.home].rooms;
   <div class="iv">${ks.length?groups.map(([g,a])=>`${g?`<div class="ig">${g}</div>`:''}${a.map(k=>`<div class="il ${SEL===k?'sel':''}" data-pick="${k}"><div class="im">${imgTag(k)}</div><div class="t"><b>${nameOf(k)}</b><small>${ROOMNAME[I[k].room]}</small></div><span class="p">${money(price(k))}</span><button class="x" data-del="${k}" aria-label="Remove">✕</button></div>`).join('')}`).join(''):'<p class="iempty">Nothing here yet. Pick pieces from the tray below and they’ll drop into the room.</p>'}</div>
   <div class="ift">${all?'':`<div class="row"><span>This room</span><span>${money(roomTot)}</span></div>`}${sav?`<div class="row"><span>Kit savings</span><span style="color:var(--green)">−${money(sav)}</span></div>`:''}<div class="row"><span>Total, ${all_.length} items</span><b>${money(grand)}</b></div><button class="btn dark" id="inspCheckout">Review & checkout</button></div>`;
   [...rooms.map(([r])=>ROOMICON[r]),...ks].forEach(k=>queueThumb(k,true));}
-function updateCount(){$('cartN').textContent=inCart().length;}
+function updateCount(){const n=inCart().length;$('cartN').textContent=n;const t=$('tabCartN');if(t){t.textContent=n;t.style.display=n?'':'none';}}
 function toggle(k){if(S.paid.has(k)&&S.added.has(k))S.paid.delete(k);if(VIEW==='room'&&provided(k)&&homeRooms().includes(I[k].room))return;const on=!S.added.has(k);on?S.added.add(k):S.added.delete(k);save();updateCount();
   if(VIEW==='room'){animItem(k,on);renderRoomUI();hidePop();}else refreshTiles();
   if(on)toast(`${nameOf(k)} added, ${money(price(k))}`);}
@@ -1286,11 +1323,15 @@ function renderQuizChrome(busy){if(!$('qside'))return;const q=QZ[QI];const cur=q
    `<div class="qi-h"><span>Question ${QI+1} of ${QZ.length}</span>${QI?'<button data-qback style="color:var(--ink2)">← Back</button>':''}</div><div class="qi-q">${q.t}</div><div class="qi-s">${q.s}</div>
    ${q.o.map(([v,b,sm],i)=>`<button class="qi-o ${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><span class="k">${'ABC'[i]}</span><span><b>${b}</b><small>${sm}</small></span></button>`).join('')}
    <button class="qi-sk" data-qskip>Skip this question →</button>`;
-  $('qbar').innerHTML=`<span class="prog">${QZ.map((_,i)=>`<i class="${i<=QI?'on':''}"></i>`).join('')}</span><span>${busy?'Building your room':`Question ${QI+1} of ${QZ.length}`}</span>${busy?'':`<button data-qskip>Skip question</button><button class="dark" data-qexit>Skip to shop</button>`}`;
+  $('qbar').innerHTML=`<span class="prog">${QZ.map((_,i)=>`<i class="${i<=QI?'on':''}"></i>`).join('')}</span><span class="ql">${busy?'Building your room':`Question ${QI+1} of ${QZ.length}`}</span>${busy?'':`${QI?'<button class="qbk" data-qback>← Back</button>':''}<button data-qskip>Skip<span class="lg"> question</span></button><button class="dark" data-qexit>Skip to shop</button>`}`;
   $('bubble').innerHTML=busy?`<div class="ph"><span class="tag">ALMOST DONE</span><span>You</span></div><p>Picking the pieces that fit…</p>`:`<div class="ph"><span class="tag">NEEDS YOU</span><span>Question ${QI+1} of ${QZ.length}</span></div><p>${q.t}</p><div class="bb">${q.o.map(([v,b,sm])=>`<button class="${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><b>${b}</b>${sm?`<small>${sm}</small>`:''}</button>`).join('')}</div>`;
   $('bubble').classList.add('show');}
 function tlHTML(steps,at,busy){return `<div class="qi-t"><h5>What happens</h5>${steps.map(([b,sm,i])=>{const st=i<at?'ok':i===at?'cur':'';return `<div class="tl ${st}"><i>${st==='ok'?'✓':''}</i><b>${b}</b><small>${sm}</small>${busy&&i===at?'<span class="pb"><i></i></span>':''}</div>`}).join('')}</div>`;}
-function placeBubble(){if(VIEW!=='quiz'||!P||innerWidth<760)return;const town=MODE==='town';
+function placeBubble(){if(VIEW!=='quiz'||!P)return;const town=MODE==='town';
+  if(innerWidth<760){const v=P.position.clone().add(new THREE.Vector3(0,town?1.9:2.0,0)).project(cam);const px=(v.x+1)/2*innerWidth;
+    const b=$('bubble'),w=b.offsetWidth||innerWidth-24,h=b.offsetHeight||260;const left=12,top=innerHeight-h-14-(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab'))||0);
+    b.classList.remove('right','left');b.classList.add('up');b.style.transform='none';b.style.visibility='';b.style.left=left+'px';b.style.top=top+'px';b.style.setProperty('--tx',Math.max(34,Math.min(w-34,px-left))+'px');return;}
+  $('bubble').classList.remove('up');
   // anchor beside the character's head, on the side with more open space, and always fully on screen
   const v=P.position.clone().add(new THREE.Vector3(town?.25:0,town?1.25:1.7,0)).project(cam);const px=(v.x+1)/2*innerWidth,py=(1-v.y)/2*innerHeight;
   const b=$('bubble'),w=b.offsetWidth||400,h=b.offsetHeight||260,M=24,TOP=84,BOT=96,G=30;
@@ -1422,7 +1463,7 @@ document.addEventListener('click',e=>{if(VIEW!=='checkout'||!CO)return;const t=e
 /* ================= ROUTER ================= */
 let VIEW='';
 function go(v,fromHash){if(!['home','shop','room','quiz','checkout'].includes(v))v='home';if(v==='checkout'&&(!CO||!inCart().length))v=inCart().length?(CO={step:1,done:null,promo:'',err:{},d:{name:'',email:'',street:'',unit:'',city:'',st:'',zip:'',date:2,slot:1,method:'door',pack:true},p:{m:'card',num:'',exp:'',cvc:'',nm:'',same:true}},'checkout'):'shop';VIEW=v;document.body.dataset.view=v;
-  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===v));
+  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===v));document.querySelectorAll('[data-tab]').forEach(a=>a.classList.toggle('on',a.dataset.tab===v));
   if(!fromHash&&location.hash!=='#'+v){try{history.replaceState(null,'','#'+v)}catch(e){}}
   hidePop();
   if(v==='home'){renderHome();const SHOW=['sofa','coffee','rug','floorlamp','plant','shelf','wallart','armchair','sidetable','throw'];buildRoom({room:'living',items:SHOW,show:new Set(SHOW),quiz:true});HOMET=performance.now();}
@@ -1436,6 +1477,7 @@ addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(v&&v!==VIEW
 /* ================= EVENTS ================= */
 document.addEventListener('click',e=>{
   if(e.target.closest('#qiGo')){closeIntro();return;}
+  if(e.target.closest('#tabCart')){$('cartBtn').click();return;}
   const g=e.target.closest('[data-go]');if(g){e.preventDefault();openCart(false);if(g.dataset.go!=='quiz')document.body.classList.remove('qintro-on');go(g.dataset.go);return;}
   const ak=e.target.closest('[data-addkit]');if(ak){const kit=KITS.find(x=>x.id===ak.dataset.addkit);kit.items.forEach(i=>S.added.add(i));S.kits.add(kit.id);save();updateCount();refreshTiles();toast(`${kit.n} added · ${kit.items.length} pieces`);return;}
   const vk=e.target.closest('[data-viewkit]');if(vk){const kit=KITS.find(x=>x.id===vk.dataset.viewkit);S.home=kit.home;S.furn=null;kit.items.forEach(i=>S.added.add(i));S.kits.add(kit.id);S.room=homeRooms()[0];save();updateCount();go('room');return;}
