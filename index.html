@@ -540,7 +540,7 @@ body[data-view="checkout"] .hdr{box-shadow:0 1px 0 var(--line)}
     <button class="choice" data-go="shop">
       <div class="ch"><h2>Browse the shop</h2><p>Every piece for every room. Add what you like and see it in your room in 3D.</p></div>
       <div class="cv"><div class="quad" id="quad"></div></div>
-      <div class="ct"><div class="row"><span class="muted" id="shopCount">All pieces</span><span class="btn dark">Open shop</span></div></div>
+      <div class="ct"><div class="row"><span class="btn dark">Open shop</span></div></div>
     </button>
   </section>
   <section class="sec">
@@ -1013,7 +1013,7 @@ const KITS=[
   {id:'shared',home:'shared',who:'For a room in a shared apartment',n:'Shared kit',d:'Your own room set up properly, plus a few things for the kitchen and bathroom you share.',items:['bed','bedding','desk','chair','nightstand','lamp','wardrobe','divider','dishes','utensils','towels','caddy']}];
 const kitPrice=kit=>{const full=kit.items.reduce((s,i)=>s+price(i),0);return [full,Math.round(full*.85/10)*10-1];};
 function renderHome(){$('quad').innerHTML=['sofa','floorlamp','armchair','plant'].map(k=>`<div>${imgTag(k)}</div>`).join('');
-  $('shopCount').textContent=`${KEYS.length} pieces, 4 rooms`;
+
   $('kits').innerHTML=KITS.map(k=>{const [full,p]=kitPrice(k);const key='kit:'+k.id;return `<article class="kit"><div class="kv"><img data-k="${key}" alt="" ${TH[key]?`src="${TH[key]}" class="ok"`:''}></div><div class="kc"><h4>${k.n}</h4><span class="who">${k.who}</span><p class="kd">${k.d}</p><ul>${k.items.map(i=>`<li>${nameOf(i)}</li>`).join('')}</ul><div class="kp"><b>${money(p)}</b><s>${money(full)}</s><em>Save ${money(full-p)}</em></div><div class="kb"><button class="btn green" data-addkit="${k.id}">Add kit to cart</button><button class="btn soft" data-viewkit="${k.id}">See it in 3D</button></div></div></article>`}).join('');
   KITS.forEach(k=>queueThumb('kit:'+k.id,true));['plant','armchair','floorlamp','sofa'].forEach(k=>queueThumb(k,true));}
 function renderShop(){const rooms=['all','bedroom','living','kitchen','bathroom'];const list=KEYS.filter(k=>S.filter==='all'||I[k].room===S.filter).sort((a,b)=>PRI.indexOf(a)-PRI.indexOf(b));
