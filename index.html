@@ -936,12 +936,19 @@ function brickTex(base,mortar){const k=base+mortar;if(!BRK[k])BRK[k]=canvasTex(2
 function brickBox(g,w,h,d,base,mortar,y){const geo=new THREE.BoxGeometry(w,h,d);const mats=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]].map(([a,b])=>{const t=brickTex(base,mortar).clone();t.needsUpdate=true;t.repeat.set(a*.9,b*.9);return new THREE.MeshStandardMaterial({map:t,roughness:.92});});
   const m=new THREE.Mesh(geo,mats);m.position.set(0,y,0);m.castShadow=true;m.receiveShadow=true;g.add(m);return m;}
 function building(type){const g=new THREE.Group();const d=3;let w,h;
-  const win=(x,y,z,ww,hh,side)=>box(g,side?.04:ww,hh,side?ww:.04,'#DCE3E6',x,y,z,{cs:false,role:'glass'});
+  // real windows: white frame, glossy blue glass with a sky reflection, cross bars and a stone sill
+  const GL=building.GL||(building.GL=new THREE.MeshPhysicalMaterial({map:canvasTex(64,128,(x,w,h)=>{const gr=x.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#BFE0F7');gr.addColorStop(.45,'#6FA8D8');gr.addColorStop(1,'#3E73A8');x.fillStyle=gr;x.fillRect(0,0,w,h);
+    x.globalAlpha=.45;x.fillStyle='#FFFFFF';x.beginPath();x.moveTo(w*.15,0);x.lineTo(w*.45,0);x.lineTo(w*.05,h*.55);x.lineTo(0,h*.55);x.lineTo(0,h*.25);x.fill();x.globalAlpha=.25;x.beginPath();x.moveTo(w*.6,0);x.lineTo(w*.72,0);x.lineTo(w*.3,h*.6);x.lineTo(w*.18,h*.6);x.fill();}),
+    roughness:.05,metalness:.2,clearcoat:1,clearcoatRoughness:.03,envMapIntensity:1.6}));
+  const win=(x,y,z,ww,hh,side)=>{const wg=new THREE.Group();wg.position.set(x,y,z);if(side)wg.rotation.y=Math.PI/2;g.add(wg);
+    rb(wg,ww+.09,hh+.09,.05,'#F4F1EC',0,0,0,{role:'paint',r:.008,cs:false});
+    const gm=new THREE.Mesh(new THREE.BoxGeometry(ww,hh,.02),GL);gm.position.z=.022;wg.add(gm);
+    rb(wg,.028,hh,.03,'#F4F1EC',0,0,.03,{role:'paint',r:.004,cs:false});rb(wg,ww,.028,.03,'#F4F1EC',0,hh*.12,.03,{role:'paint',r:.004,cs:false});
+    rb(wg,ww+.16,.045,.09,'#E2DCD2',0,-hh/2-.065,.035,{role:'paint',r:.008,cs:false});};
   if(type==='dorm'){w=3;h=6;brickBox(g,w,h,d,'#A6503B','#D8CFC4',h/2);box(g,w+.16,.16,d+.16,'#D9DCE0',0,h+.08,0,{role:'paint'});
     for(let r=0;r<5;r++)for(let c=0;c<4;c++){win(-1.05+c*.7,2.05+r*.82,d/2+.02,.42,.48);win(w/2+.02,2.05+r*.82,-1.05+c*.7,.42,.48,1);}}
-  if(type==='studio'){w=3.2;h=4.3;brickBox(g,w,h,d,'#B9714F','#E2D8CB',h/2);box(g,w+.16,.14,d+.16,'#DEE1E5',0,h+.07,0,{role:'paint'});
-    for(let r=0;r<3;r++)for(let c=0;c<3;c++){win(-1+c,2.0+r*.8,d/2+.02,.62,.5);box(g,.78,.04,.3,'#2A2C2B',-1+c,1.72+r*.8,d/2+.15);}
-    for(let r=0;r<3;r++)win(w/2+.02,2.0+r*.8,0,1.8,.5,1);}
+  if(type==='studio'){w=3.2;h=6;brickBox(g,w,h,d,'#B9714F','#E2D8CB',h/2);box(g,w+.16,.16,d+.16,'#DEE1E5',0,h+.08,0,{role:'paint'});
+    for(let r=0;r<5;r++){for(let c=0;c<3;c++)win(-1+c,2.05+r*.82,d/2+.02,.6,.48);[-.6,.6].forEach(zz=>win(w/2+.02,2.05+r*.82,zz,.6,.48,1));}}
   box(g,.68,1.1,.06,type==='studio'?'#111316':'#2F6BFF',0,.55,d/2+.03,{role:'lacquer'});
   box(g,1.3,.06,.7,'#D6D2CA',0,.03,d/2+.35,{role:'paint'});
   const lb=label(HOMES[type].n);lb.position.set(0,1.5,d/2+.06);g.add(lb);
@@ -1114,7 +1121,7 @@ const ease=t=>{const c1=1.4,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,
 function bottomInset(){if(VIEW==='quiz'&&innerWidth>=760)return 76;if(VIEW==='room'){const t=$('tray');return t.classList.contains('hide')?64:t.offsetHeight+20;}if(VIEW==='quiz')return $('qpanel').offsetHeight+20;return 0;}
 function frame(instant=true){const w=innerWidth,h=innerHeight;if(!w||!h)return;renderer.setSize(w,h,false);composer&&composer.setSize(w,h);cam.aspect=w/h;
   const d=bottomInset(),wide=(VIEW==='room'||VIEW==='quiz')&&w>=760,top=VIEW==='room'?(wide?84:130):(VIEW==='quiz'&&wide&&MODE!=='town'?190:72),LI=wide&&VIEW!=='quiz'?(w<1100?242:300):0,RI=wide&&VIEW!=='quiz'?(w<1100?272:340):0;let corners,tgt,az,pol,looseB,topK;
-  if(MODE==='town'){corners=[[-7.4,0,-1.6],[7.4,0,-1.6],[-7.4,0,7.2],[7.4,0,7.2],[-7.1,6.2,-1.6],[7.4,4.0,-1.6]];tgt=new THREE.Vector3(0,1.8,2.2);az=.18;pol=1.2;looseB=0;topK=1;}
+  if(MODE==='town'){corners=[[-7.4,0,-1.6],[7.4,0,-1.6],[-7.4,0,7.2],[7.4,0,7.2],[-7.1,6.2,-1.6],[7.4,6.2,-1.6]];tgt=new THREE.Vector3(0,1.8,2.2);az=.18;pol=1.2;looseB=0;topK=1;}
   else{const {W,D}=dims();corners=[[-4.22,-.22,-3.22],[-4+W,-.22,-3.22],[-4.22,-.22,-3+D],[-4+W,-.22,-3+D],[-4.22,3.0,-3.22],[-4+W,3.0,-3.22],[-4.22,3.0,-3+D]];tgt=new THREE.Vector3(-4+W/2-.05,1.0,-3+D/2);az=.62;pol=1.12;looseB=VIEW==='quiz'?.15:.85;topK=.3;}
   corners=corners.map(v=>new THREE.Vector3(...v));
   const topL=top*topK,botL=Math.min(h-16,h-d+d*looseB),mid=(topL+botL)/2;
