@@ -398,7 +398,8 @@ body[data-view="quiz"].qintro-on .bubble,body[data-view="quiz"].qintro-on .qbar,
 .qbar .dark{background:var(--ink);color:#fff}.qbar .dark:hover{background:#2A2D33}
 .bubble{position:fixed;z-index:8;transform:translate(-50%,calc(-100% - 14px));width:min(420px,46vw);background:rgba(255,255,255,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:26px;padding:20px 22px 20px;box-shadow:0 0 0 1px rgba(255,255,255,.8),0 18px 44px -18px rgba(40,50,70,.4);pointer-events:auto}
 .bubble:after{content:"";position:absolute;left:50%;bottom:-8px;width:16px;height:16px;background:rgba(255,255,255,.94);transform:translateX(-50%) rotate(45deg);border-radius:3px}
-.bubble.right{transform:translate(22px,-50%)}.bubble.right:after{left:-7px;top:50%;bottom:auto;transform:translateY(-50%) rotate(45deg)}
+.bubble.right:after{left:-7px;top:var(--ty,50%);bottom:auto;transform:translateY(-50%) rotate(45deg)}
+.bubble.left:after{left:auto;right:-7px;top:var(--ty,50%);bottom:auto;transform:translateY(-50%) rotate(45deg)}
 .bubble .ph{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .bubble .tag{white-space:nowrap;font-size:12px;font-weight:600;letter-spacing:.02em;background:var(--ink);color:#fff;border-radius:6px;padding:3px 7px}
 .bubble .ph span{font-size:14px;color:var(--mu);white-space:nowrap}
@@ -1289,7 +1290,16 @@ function renderQuizChrome(busy){if(!$('qside'))return;const q=QZ[QI];const cur=q
   $('bubble').innerHTML=busy?`<div class="ph"><span class="tag">ALMOST DONE</span><span>You</span></div><p>Picking the pieces that fit…</p>`:`<div class="ph"><span class="tag">NEEDS YOU</span><span>Question ${QI+1} of ${QZ.length}</span></div><p>${q.t}</p><div class="bb">${q.o.map(([v,b,sm])=>`<button class="${QDONE[q.id]&&cur===v?'on':''}" data-v="${v}" data-qopt="1"><b>${b}</b>${sm?`<small>${sm}</small>`:''}</button>`).join('')}</div>`;
   $('bubble').classList.add('show');}
 function tlHTML(steps,at,busy){return `<div class="qi-t"><h5>What happens</h5>${steps.map(([b,sm,i])=>{const st=i<at?'ok':i===at?'cur':'';return `<div class="tl ${st}"><i>${st==='ok'?'✓':''}</i><b>${b}</b><small>${sm}</small>${busy&&i===at?'<span class="pb"><i></i></span>':''}</div>`}).join('')}</div>`;}
-function placeBubble(){if(VIEW!=='quiz'||!P||innerWidth<760)return;const town=MODE==='town';const v=P.position.clone().add(new THREE.Vector3(town?.25:0,town?1.1:2.0,0)).project(cam);const b=$('bubble');b.classList.toggle('right',town);b.style.visibility='';b.style.left=((v.x+1)/2*innerWidth)+'px';b.style.top=((1-v.y)/2*innerHeight)+'px';}
+function placeBubble(){if(VIEW!=='quiz'||!P||innerWidth<760)return;const town=MODE==='town';
+  // anchor beside the character's head, on the side with more open space, and always fully on screen
+  const v=P.position.clone().add(new THREE.Vector3(town?.25:0,town?1.25:1.7,0)).project(cam);const px=(v.x+1)/2*innerWidth,py=(1-v.y)/2*innerHeight;
+  const b=$('bubble'),w=b.offsetWidth||400,h=b.offsetHeight||260,M=24,TOP=84,BOT=96,G=30;
+  let side=town?'right':'left';
+  const fits=sd=>sd==='right'?px+G+w<=innerWidth-M:px-G-w>=M;if(!fits(side)&&fits(side==='right'?'left':'right'))side=side==='right'?'left':'right';
+  let left=side==='right'?px+G:px-G-w;left=Math.max(M,Math.min(innerWidth-w-M,left));
+  let top=py-h*.42;top=Math.max(TOP,Math.min(innerHeight-h-BOT,top));
+  b.classList.toggle('right',side==='right');b.classList.toggle('left',side==='left');
+  b.style.transform='none';b.style.visibility='';b.style.left=left+'px';b.style.top=top+'px';b.style.setProperty('--ty',Math.max(26,Math.min(h-26,py-top))+'px');}
 function renderQ(anim=true){renderQuizChrome(false);const q=QZ[QI];const cur=q.id==='furn'?furnKey():S[q.id];
   $('qpanel').innerHTML=`<div class="qtop"><div class="qprog">${QZ.map((_,i)=>`<i class="${i<=QI?'on':''}"></i>`).join('')}<span>${QI+1} / ${QZ.length}</span></div><div class="links">${QI?'<button data-qback>← Back</button>':''}<button data-qexit>Skip to shop</button></div></div>
   <h2>${q.t}</h2><p class="qs">${q.s}</p>
