@@ -1022,6 +1022,7 @@ function leanOnTree(tx,tz,face,o={}){const p=person();const bx=Math.sin(face),bz
   if(o.sit){sitPose(p,-1.57);p.position.set(tx-bx*-.0+bx*.26,-.66,tz+bz*.26);}else{const dd=o.d||.3;p.position.set(tx+bx*dd,0,tz+bz*dd);p.rotation.order='YXZ';p.rotation.x=-.1;p.userData.L.rotation.z=.08;p.userData.R.rotation.z=-.12;}
   p.rotation.y=face;
   if(o.book){p.userData.AL.rotation.x=-1.0;p.userData.AR.rotation.x=-1.0;const bk=rb(p,.36,.26,.04,'#2F6BFF',0,1.12,.42,{role:'paint',r:.01});bk.rotation.x=-.5;}
+  else if(o.laptop){p.userData.AL.rotation.x=-1.15;p.userData.AR.rotation.x=-1.15;rb(p,.36,.018,.26,'#C9CDD2',0,.9,.36,{role:'paint',r:.006});const sc=rb(p,.36,.24,.014,'#2A2C2F',0,1.02,.5,{role:'paint',r:.006});sc.rotation.x=.28;}
   else if(o.phone){p.userData.AR.rotation.x=-1.6;p.userData.AL.rotation.x=-.2;rb(p,.08,.15,.015,'#1D1E1F',.18,1.42,.36,{role:'paint',r:.006});}
   else{p.userData.AL.rotation.x=-.45;p.userData.AR.rotation.x=-.45;}
   scene.add(p);return p;}
@@ -1035,7 +1036,7 @@ function townLife(){FLW=[];AVOID=[];
   {const HX=-6.5,HZ=.5;tree(HX-1.3,HZ,1.05,0);tree(HX+1.3,HZ,1.0,1);const hg=new THREE.Group();hg.position.set(HX,0,HZ);hg.rotation.y=Math.PI/2;scene.add(hg);hammock(0,-1.05,1.05,1.15,.55,hg);
    const hp=lounger(HX-.05,HZ,0,'#7DB35A','#2E3846',3);hp.scale.setScalar(.82);hp.position.y=.64;}
   // leaning on trees: one reading with their back against the middle tree, one standing on their phone by the front-right tree
-  tree(-4.6,8.5,1.0,0,.55);leanOnTree(-4.6,8.5,.35,{sit:1,book:1});
+  tree(-4.6,8.5,1.0,0,.55);leanOnTree(8.0,5.2,-.35,{sit:1,laptop:1});leanOnTree(-4.6,8.5,.35,{sit:1,book:1});
   // a frisbee game across the middle: thrower on the right, catcher between the buildings
   const f=person();f.position.set(6.4,0,2.4);f.rotation.y=-1.75;f.userData.AR.rotation.x=-2.4;scene.add(f);
   const cch=person();cch.position.set(-.95,0,2.25);cch.rotation.y=1.45;cch.userData.AL.rotation.x=-2.2;cch.userData.AR.rotation.x=-1.5;scene.add(cch);
@@ -1051,7 +1052,7 @@ function buildTown(){disposeScene();scene=new THREE.Scene();scene.background=new
   const gr=new THREE.Mesh(new THREE.CircleGeometry(120,64),new THREE.MeshStandardMaterial({color:'#FFFFFF',roughness:.95,map:canvasTex(256,256,(x,w,h)=>{x.fillStyle='#8DBA4E';x.fillRect(0,0,w,h);for(let i=0;i<3200;i++){const r=Math.random();x.fillStyle=r<.45?'rgba(60,105,35,.22)':r<.8?'rgba(185,215,120,.2)':'rgba(120,160,70,.25)';x.save();x.translate(Math.random()*w,Math.random()*h);x.rotate(Math.random()*.6-.3);x.fillRect(0,0,1.2,3+Math.random()*7);x.restore();}},{repeat:[60,60]})}));gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;scene.add(gr);
   const walk=new THREE.Mesh(new THREE.PlaneGeometry(18,1.6),new THREE.MeshStandardMaterial({color:'#EFE4CC',roughness:.9}));walk.rotation.x=-Math.PI/2;walk.position.set(0,.005,3.6);walk.receiveShadow=true;scene.add(walk);
   BLD={};['dorm','studio'].forEach(t=>{const b=building(t);scene.add(b);BLD[t]=b;});
-  tree(0,-1.6,.9,1);tree(6.2,.2,1.15,1);tree(-4.2,-2.4,.95,1);tree(4.3,-2.6,1.05,0);tree(-7.3,5.6,1.2,1);tree(8.0,4.4,1.1,0,.85);
+  tree(0,-1.6,.9,1);tree(6.2,.2,1.15,1);tree(-4.2,-2.4,.95,1);tree(4.3,-2.6,1.05,0);tree(-7.3,5.6,1.2,1);tree(8.0,5.2,1.1,0,.85);
   townLife();
   P=person();P.position.set(0,0,6.4);P.rotation.y=Math.PI;scene.add(P);
   ITEMS={};if(composer){composer.passes[0].scene=scene;gtao.scene=scene;}frame();}
