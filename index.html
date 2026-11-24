@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Settly — Furnish your first place</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Geist: free stand-in for Dinamo's ABC Diatype -->
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/GTMaru-VF.woff2" as="font" type="font/woff2" crossorigin>
+<!-- GT Maru (Grilli Type), self-hosted variable font: weights 300–900 -->
 <style>
+@font-face{font-family:"GT Maru";src:url("fonts/GTMaru-VF.woff2") format("woff2");font-weight:300 900;font-style:normal;font-display:swap}
+@font-face{font-family:"GT Maru";src:url("fonts/GTMaru-VF.woff2") format("woff2");font-weight:300 900;font-style:oblique 0deg 7deg;font-display:swap}
 :root{
   --ink:#111316; --ink2:#454A52; --mu:#8D939C; --line:#E4E7EB; --tile:#EEF0F3; --bg:#F4F5F7; --card:#FFFFFF;
   --green:#2F6BFF; --green-h:#1F57E6;
-  --font:"Geist","ABC Diatype",Inter,system-ui,-apple-system,sans-serif;
+  --font:"GT Maru",system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg)}
